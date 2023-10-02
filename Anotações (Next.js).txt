@@ -1,2 +1,2 @@
 1. Criar projeto
-    npx create-next-app agenda-dev
+    npx create-next-app@latest agenda-dev --use-npm --example "https://github.com/vercel/next-learn/tree/main/basics/learn-starter"
