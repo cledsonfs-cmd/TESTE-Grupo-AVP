@@ -1,0 +1,33 @@
+1. Criar projeto
+    npx @nestjs/cli new agenda-dev-api
+2. Start projeto
+    cd nest-shopping-list
+    npm run start:dev
+3. Criando a estrutura para a entidade (REST API | Yes)
+    nest generate resource item
+4. Adicionando persistência
+    npm install --save @nestjs/typeorm typeorm pg
+    npm install --save @nestjs/config
+    npm install --save class-validator class-transformer
+5. Arquivo .env
+    SERVER_PORT=3000
+    MODE=DEV
+    DB_HOST=127.0.0.1
+    DB_PORT=5432
+    DB_USERNAME=postgres
+    DB_PASSWORD=
+    DB_DATABASE=shopping_list
+    DB_SYNCHRONIZE=true
+6. Swagger
+    npm install --save @nestjs/swagger swagger-ui-express
+7.Executar
+    npm run start:dev
+8. Segurança
+    nest g module auth
+    nest g controller auth
+    nest g service auth
+
+    nest g module users
+    nest g service users
+
+    npm install --save @nestjs/jwt

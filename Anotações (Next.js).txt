@@ -1,0 +1,2 @@
+1. Criar projeto
+    npx create-next-app agenda-dev

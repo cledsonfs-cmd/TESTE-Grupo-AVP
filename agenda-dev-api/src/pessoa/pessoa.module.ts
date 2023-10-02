@@ -7,6 +7,7 @@ import { Pessoa } from './entities/pessoa.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Pessoa])],
   controllers: [PessoaController],
-  providers: [PessoaService],
+  providers: [PessoaService],  
+  exports: [PessoaService]
 })
 export class PessoaModule {}

@@ -23,6 +23,10 @@ export class PessoaService {
     return this.repository.findOneBy({id: id});
   }
 
+  findByEmpresa(idEmpresa: string): Promise<Pessoa[]> {
+    return this.repository.findBy({empresa: idEmpresa});
+  }
+
   async update(id: string, updatePessoaDto: UpdatePessoaDto): Promise<Pessoa> {
     const pessoa = await this.repository.preload({
       id: id,
@@ -37,5 +41,17 @@ export class PessoaService {
   async remove(id: string) {
     const pessoa = await this.findOne(id);
     return this.repository.remove(pessoa);
+  }
+
+  findByNome(nome: string): Promise<Pessoa[]> {
+    return this.repository.findBy({nome: nome});
+  }
+
+  findByProfissao(profissao: string): Promise<Pessoa[]> {
+    return this.repository.findBy({profissao: profissao});
+  }
+
+  findByCidade(cidade: string): Promise<Pessoa[]> {
+    return this.repository.findBy({empresa: cidade});
   }
 }
