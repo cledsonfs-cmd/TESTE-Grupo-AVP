@@ -14,13 +14,9 @@ import { UsersModule } from './users/users.module';
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-     host: process.env.DB_HOST,
-     port: parseInt(process.env.DB_PORT),
-     username: process.env.DB_USERNAME,
-     password: process.env.DB_PASSWORD,
-     database: process.env.DB_DATABASE,
-     entities: [__dirname + '/**/*.entity{.ts,.js}'],
-     synchronize: (process.env.DB_SYNCHRONIZE === 'true'),
+      url: process.env.DATABASE_URL,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: (process.env.DB_SYNCHRONIZE === 'true'),
     }),
     PessoaModule,
     EmpresaModule,
@@ -30,4 +26,4 @@ import { UsersModule } from './users/users.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
