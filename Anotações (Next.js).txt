@@ -1,2 +1,5 @@
 1. Criar projeto
-    npx create-next-app@latest agenda-dev --use-npm --example "https://github.com/vercel/next-learn/tree/main/basics/learn-starter"
+    //npx create-next-app@latest agenda-dev --use-npm --example "https://github.com/vercel/next-learn/tree/main/basics/learn-starter"
+    npx create-next-app@^11.0.0 agenda-dev
+2. install https://tailwindcss.com/docs/guides/nextjs
+3. npm install js-cookie
