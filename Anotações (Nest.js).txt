@@ -20,6 +20,7 @@
     DB_SYNCHRONIZE=true
 6. Swagger
     npm install --save @nestjs/swagger swagger-ui-express
+    http://localhost:3000/api
 7.Executar
     npm run start:dev
 8. Segurança

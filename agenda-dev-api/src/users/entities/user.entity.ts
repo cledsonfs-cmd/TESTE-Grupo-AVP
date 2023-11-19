@@ -8,8 +8,8 @@ export class User extends BaseEntity {
     @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
     updatedAt: Date;
 
-    @Column({ name: 'username', type: 'varchar', nullable: false, length: 50 })
-    username: string;
+    @Column({ name: 'email', type: 'varchar', nullable: false, length: 50 })
+    email: string;
 
     @Column({ name: 'password', type: 'varchar',nullable: false,  length: 8 })
     password: string;
