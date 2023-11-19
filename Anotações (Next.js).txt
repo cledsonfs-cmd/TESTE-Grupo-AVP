@@ -3,3 +3,4 @@
     npx create-next-app@^11.0.0 agenda-dev
 2. install https://tailwindcss.com/docs/guides/nextjs
 3. npm install js-cookie
+4. npm install --save axios
