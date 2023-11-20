@@ -4,3 +4,5 @@
 2. install https://tailwindcss.com/docs/guides/nextjs
 3. npm install js-cookie
 4. npm install --save axios
+5. rodando
+    yarn run dev

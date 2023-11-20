@@ -8,8 +8,11 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } 
 
 @Entity()
 export class Pessoa extends BaseEntity {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn('uuid')    
     id: string;
+
+    @Column({ name: 'id_usuario', type: 'varchar', nullable: true, length: 100 })
+    idUsuario: string;
 
     @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
     updatedAt: Date;
@@ -60,5 +63,5 @@ export class Pessoa extends BaseEntity {
     complemento?: string;
 
     @Column({ name: 'foto', type: 'varchar', length: 100 })
-    foto?: string;
+    foto?: string;    
 }

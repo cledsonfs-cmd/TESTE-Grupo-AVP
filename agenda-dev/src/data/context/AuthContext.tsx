@@ -2,7 +2,8 @@ import router from 'next/router'
 import Cookies from 'js-cookie'
 import { createContext, useEffect, useState } from 'react';
 import firebase from '../../firebase/config';
-import Usuario from '../../model/Usuatio';
+import Usuario from '../../model/Usuario';
+import { api, requestConfig } from "../../utils/config";
 
 interface AuthContextProps {
     usuario?: Usuario
@@ -15,15 +16,14 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps>({})
 
-async function usuarioNormalizado(usuarioFirebase: firebase.User): Promise<Usuario> {
-    const token = await usuarioFirebase.getIdToken()
+async function usuarioNormalizado(usuarioApi: Usuario): Promise<Usuario> {    
     return {
-        uid: usuarioFirebase.uid,
-        nome: usuarioFirebase.displayName,
-        email: usuarioFirebase.email,
-        token,
-        provedor: usuarioFirebase.providerData[0].providerId,
-        imagemUrl: usuarioFirebase.photoURL
+        uid: usuarioApi.uid,
+        nome: usuarioApi.nome,
+        email: usuarioApi.email,
+        token: usuarioApi.token,
+        provedor: usuarioApi.provedor,
+        imagemUrl: usuarioApi.imagemUrl
     }
 }
 
@@ -42,9 +42,9 @@ export function AuthProvider(props) {
     const [carregando, setCarregando] = useState(true)
     const [usuario, setUsuario] = useState<Usuario>(null)
 
-    async function configurarSessao(usuarioFirebase) {
-        if (usuarioFirebase?.email) {
-            const usuario = await usuarioNormalizado(usuarioFirebase)
+    async function configurarSessao(usuarioAPI) {
+        if (usuarioAPI?.email) {
+            const usuario = await usuarioNormalizado(usuarioAPI)
             setUsuario(usuario)
             gerenciarCookie(true)
             setCarregando(false)
@@ -56,65 +56,60 @@ export function AuthProvider(props) {
             return false
         }
     }
-
     async function login(email, senha) {
+        const data = {
+            email,
+            password: senha
+        }
+        const config = requestConfig("POST", data);
         try {
             setCarregando(true)
-            const resp = await firebase.auth().signInWithEmailAndPassword(email, senha)
-
-            await configurarSessao(resp.user)
+            const res = await fetch(api + "/auth/login", config)
+                .then((res) => res.json())
+                .catch((err) => err);
+            const user = JSON.stringify(res);
+            console.log(user)
+            await configurarSessao(user)
             router.push('/')
-        } finally {
+        } catch (error) {
+            console.log(error);
             setCarregando(false)
         }
+
     }
+
+    // async function login(email, senha) {
+    //     try {
+    //         setCarregando(true)
+    //         const resp = await firebase.auth().signInWithEmailAndPassword(email, senha)
+
+    //         await configurarSessao(resp.user)
+    //         router.push('/')
+    //     } finally {
+    //         setCarregando(false)
+    //     }
+    // }
 
     async function cadastrar(email, senha) {
+        const data = {
+            email,
+            password: senha
+        }
+        const config = requestConfig("POST", data);
         try {
             setCarregando(true)
-            const userCadastrar = {
-                email,
-                password: senha
-            }
-            const res = await fetch('http://localhost:3000/user', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userCadastrar),
-            }).then((res) => res.json())
-            .catch((err) => err);
-
-            //const resp = await firebase.auth().createUserWithEmailAndPassword(email, senha)
-            
-            //if (res.ok) {
-                console.log("-->"+res.json)
-            //  }
-            //await configurarSessao(resp.user)
-            //router.push('/')
-        } finally {
+            const res = await fetch(api + "/user", config)
+                .then((res) => res.json())
+                .catch((err) => err);
+            const user = JSON.stringify(res);
+            console.log(user)
+            //await configurarSessao(user)
+            router.push('/')
+        } catch (error) {
+            console.log(error);
             setCarregando(false)
         }
     }
-
-    // const register = async (data) => {
-    //     const config = requestConfig("POST", data);
-      
-    //     try {
-    //       const res = await fetch(api + "/usuarios", config)
-    //         .then((res) => res.json())
-    //         .catch((err) => err);
-      
-    //       if (res.ok) {
-    //         localStorage.setItem("user", JSON.stringify(res));
-    //         localStorage.setItem("token", JSON.stringify(res.token));
-    //       }
-              
-    //       return res;
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   };
 
     async function loginGoogle() {
         try {
