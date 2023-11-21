@@ -22,11 +22,7 @@ export class PessoaService {
   findOne(id: string): Promise<Pessoa> {
     return this.repository.findOneBy({id: id});
   }
-
-  findByUser(idUser: string): Promise<Pessoa> {
-    return this.repository.findOneBy({idUsuario: idUser});
-  }
-
+  
   findByEmpresa(idEmpresa: string): Promise<Pessoa[]> {
     return this.repository.findBy({empresa: idEmpresa});
   }

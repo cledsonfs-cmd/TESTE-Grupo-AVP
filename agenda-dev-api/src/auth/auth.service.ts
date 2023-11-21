@@ -7,8 +7,8 @@ import { JwtService } from '@nestjs/jwt';
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private pessoaService: PessoaService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private pessoaService: PessoaService
   ) { }
 
   async signIn(email: string, pass: string) {
@@ -17,18 +17,24 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const pessoa = await this.pessoaService.findByUser(user.id);
-
     const payload = { sub: user.id, email: user.email };
     const token = await this.jwtService.signAsync(payload)
 
-    return {
-      uid: user.id,
-      email: user.email,
-      nome: pessoa.nome,
-      token,
-      provedor: '',
-      imagemUrl: pessoa.foto
-    };
+    if (user?.idPessoa) {
+      const pessoa = await this.pessoaService.findOne(user.idPessoa)
+      return {
+        uid: user.id,
+        email: user.email,
+        token,
+        pessoa
+      };
+    } else {
+      return {
+        uid: user.id,
+        email: user.email,        
+        token
+      };
+    }
+
   }
 }
