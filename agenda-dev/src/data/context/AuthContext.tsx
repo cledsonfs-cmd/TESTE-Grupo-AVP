@@ -1,7 +1,6 @@
 import router from 'next/router'
 import Cookies from 'js-cookie'
-import { createContext, useEffect, useState } from 'react';
-import firebase from '../../firebase/config';
+import { createContext, useState } from 'react';
 import Usuario from '../../model/Usuario';
 import { api, requestConfig } from "../../utils/config";
 
@@ -16,18 +15,19 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps>({})
 
-async function usuarioNormalizado(usuarioApi: Usuario): Promise<Usuario> {    
+async function usuarioNormalizado(usuarioApi: any): Promise<Usuario> {    
     return {
         uid: usuarioApi.uid,
-        nome: usuarioApi.nome,
-        email: usuarioApi.email,
+        nome: usuarioApi.pessoa.nome,
+        email: usuarioApi.pessoa.email,
         token: usuarioApi.token,
-        provedor: usuarioApi.provedor,
-        imagemUrl: usuarioApi.imagemUrl
+        provedor: usuarioApi.pessoa.provedor,
+        imagemUrl: usuarioApi.pessoa.foto
     }
 }
 
 function gerenciarCookie(logado: boolean) {
+    console.log(logado)
     if (logado) {
         Cookies.set('admin-template-auth', logado, {
             expires: 7 //dias
@@ -35,14 +35,13 @@ function gerenciarCookie(logado: boolean) {
     } else {
         Cookies.remove('admin-template-auth')
     }
-
 }
 
 export function AuthProvider(props) {
     const [carregando, setCarregando] = useState(true)
     const [usuario, setUsuario] = useState<Usuario>(null)
 
-    async function configurarSessao(usuarioAPI) {
+    async function configurarSessao(usuarioAPI) {        
         if (usuarioAPI?.email) {
             const usuario = await usuarioNormalizado(usuarioAPI)
             setUsuario(usuario)
@@ -67,9 +66,7 @@ export function AuthProvider(props) {
             const res = await fetch(api + "/auth/login", config)
                 .then((res) => res.json())
                 .catch((err) => err);
-            const user = JSON.stringify(res);
-            console.log(user)
-            await configurarSessao(user)
+            await configurarSessao(res)
             router.push('/')
         } catch (error) {
             console.log(error);
@@ -77,18 +74,6 @@ export function AuthProvider(props) {
         }
 
     }
-
-    // async function login(email, senha) {
-    //     try {
-    //         setCarregando(true)
-    //         const resp = await firebase.auth().signInWithEmailAndPassword(email, senha)
-
-    //         await configurarSessao(resp.user)
-    //         router.push('/')
-    //     } finally {
-    //         setCarregando(false)
-    //     }
-    // }
 
     async function cadastrar(email, senha) {
         const data = {
@@ -100,10 +85,8 @@ export function AuthProvider(props) {
             setCarregando(true)
             const res = await fetch(api + "/user", config)
                 .then((res) => res.json())
-                .catch((err) => err);
-            const user = JSON.stringify(res);
-            console.log(user)
-            //await configurarSessao(user)
+                .catch((err) => err);            
+            await configurarSessao(res)
             router.push('/')
         } catch (error) {
             console.log(error);
@@ -111,38 +94,15 @@ export function AuthProvider(props) {
         }
     }
 
-    async function loginGoogle() {
-        try {
-            setCarregando(true)
-            const resp = await firebase.auth().signInWithPopup(
-                new firebase.auth.GoogleAuthProvider()
-            )
-
-            await configurarSessao(resp.user)
-            router.push('/')
-        } finally {
-            setCarregando(false)
-        }
-    }
 
     async function logout() {
         try {
-            setCarregando(true)
-            await firebase.auth().signOut()
+            setCarregando(true)            
             await configurarSessao(null)
         } finally {
             setCarregando(false)
         }
     }
-
-    useEffect(() => {
-        if (Cookies.get('admin-template-auth')) {
-            const cancelar = firebase.auth().onIdTokenChanged(configurarSessao)
-            return () => cancelar()
-        } else {
-            setCarregando(false)
-        }
-    }, [])
 
     return (
         <AuthContext.Provider value={{
@@ -150,7 +110,6 @@ export function AuthProvider(props) {
             carregando,
             cadastrar,
             login,
-            loginGoogle,
             logout
         }}>
             {props.children}

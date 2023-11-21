@@ -5,7 +5,7 @@ import useAuth from "../data/hook/useAuth";
 
 export default function Autenticacao() {
 
-    const { cadastrar, login, loginGoogle } = useAuth()
+    const { cadastrar, login } = useAuth()
 
     const [modo, setModo] = useState<'login' | 'cadastro'>('login')
     const [email, setEmail] = useState('')
@@ -64,14 +64,6 @@ export default function Autenticacao() {
                 </button>
 
                 <hr className="my-6 border-gray-300 w-full" />
-
-                {/* Futuras integrações com o google */}
-                {/* <button onClick={loginGoogle} className={`
-                w-full bg-red-500 hover:bg-red-400
-                text-white rounded-lg px-4 py-3
-                `}>
-                    Entrar com o Google
-                </button> */}
 
                 {modo === 'login' ? (
                     <p className="mt-8">
