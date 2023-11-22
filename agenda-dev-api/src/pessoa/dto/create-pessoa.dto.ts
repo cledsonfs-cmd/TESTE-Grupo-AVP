@@ -3,12 +3,6 @@ import { IsDate, IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validat
 
 export class CreatePessoaDto {
 
-    @ApiProperty({ example: 'idUsuario' })
-    @IsString()
-    @IsNotEmpty()
-    idUsuario: string;
-
-
     @ApiProperty({ example: 'Nome' })
     @IsString()
     @IsNotEmpty()
@@ -88,6 +82,11 @@ export class CreatePessoaDto {
     @IsOptional()
     @IsString()
     foto?: string;
+
+    @ApiPropertyOptional({ description: 'Opcional' })
+    @IsOptional()
+    @IsString()
+    provedor?: string; 
 
 }
 
